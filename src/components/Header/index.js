@@ -15,6 +15,7 @@ export default function Header() {
         <nav>
           <img src="" alt="" />
           <Link to="/dashboard">DASHBOARD</Link>
+          <Link to="/services">SERVIÇOS</Link>
         </nav>
 
         <aside>
