@@ -1,13 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
+
+import api from '~/services/api';
 
 import { createServiceRequest } from '~/store/modules/servics/actions';
 
 import { Container, Servicos } from './styles';
 
 export default function Servics() {
+  const [services, setServices] = useState([]);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    async function loadService() {
+      const response = await api.get('services');
+
+      const service = response.data.map((servico) => ({
+        id: servico.id,
+        name: servico.name,
+        description: servico.description,
+        price: servico.price,
+      }));
+
+      setServices(service);
+    }
+
+    loadService();
+  }, [services]);
 
   function handleSubmit(data) {
     dispatch(createServiceRequest(data));
@@ -45,21 +65,13 @@ export default function Servics() {
       <hr />
       <h2>Todos os seus serviços</h2>
       <ul>
-        <Servicos>
-          <strong>name</strong>
-          <span>description</span>
-          <span>R$</span>
-        </Servicos>
-        <Servicos>
-          <strong>name</strong>
-          <span>description</span>
-          <span>R$</span>
-        </Servicos>
-        <Servicos>
-          <strong>name</strong>
-          <span>description</span>
-          <span>R$</span>
-        </Servicos>
+        {services.map((servico) => (
+          <Servicos key={servico.id}>
+            <strong>{servico.name}</strong>
+            <span>{servico.description}</span>
+            <span>R$ {servico.price}</span>
+          </Servicos>
+        ))}
       </ul>
     </Container>
   );
